@@ -153,7 +153,14 @@ trait ApiParsoidTrait {
 			}
 		} elseif ( $response['error'] !== '' ) {
 			$this->dieWithError(
-				[ 'apierror-visualeditor-docserver-http-error', wfEscapeWikiText( $response['error'] ) ],
+				[ 'apierror-visualeditor-docserver-http-error',
+				wfEscapeWikiText(
+					$response['error'] .
+					" ||\n Request: " . $request['method'] . ' ' . $request['url'] .
+					" ||\n Params: " . ( json_encode( $params ) ) .
+					" ||\n Response body: " . $response['body'] .
+					" || "
+				) ],
 				'apierror-visualeditor-docserver-http-error'
 			);
 		} else {
@@ -169,7 +176,14 @@ trait ApiParsoidTrait {
 				]
 			);
 			$this->dieWithError(
-				[ 'apierror-visualeditor-docserver-http', $response['code'] ],
+				[ 'apierror-visualeditor-docserver-http',
+				wfEscapeWikiText(
+					$response['code'] .
+					//" ||\n Request: " . $request['method'] . ' ' . $request['url'] .
+					" ||\n Params: " . ( json_encode( $params ) ) .
+					" ||\n Response body: " . $response['body'] .
+					" || "
+				) ],
 				'apierror-visualeditor-docserver-http'
 			);
 		}
