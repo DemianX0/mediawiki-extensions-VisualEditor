@@ -623,6 +623,9 @@ class VisualEditorHooks {
 		}
 	}
 
+	const CLASS_EDIT_SOURCE = 'mw-editsection-source';
+	const CLASS_EDIT_VISUAL = 'mw-editsection-visualeditor';
+
 	/**
 	 * Changes the section edit links to add a VE edit link.
 	 *
@@ -666,6 +669,10 @@ class VisualEditorHooks {
 			return;
 		}
 
+		if ( empty( $result['editsection'] ) ) {
+			return;
+		}
+
 		$editor = self::getLastEditor( $user, $skin->getRequest() );
 		if (
 			!$config->get( 'VisualEditorUseSingleEditTab' ) ||
@@ -678,7 +685,13 @@ class VisualEditorHooks {
 			// Don't add ve-edit, but do update the edit tab (e.g. "Edit source").
 			$tabMessages = $config->get( 'VisualEditorTabMessages' );
 			$sourceEditSection = $tabMessages['editsectionsource'];
-			$result['editsection']['text'] = $skin->msg( $sourceEditSection )->inLanguage( $lang )->text();
+			$result['editsection']['text'] = $skin->msg( $sourceEditSection )->text();
+
+			// Add .mw-editsection-source class if core is not up-to-date.
+			if ( $result['editsection']['class'] !== self::CLASS_EDIT_SOURCE ) {
+				$classAttrib = &$result['editsection']['attribs']['class'];
+				$classAttrib = ( $classAttrib ? $classAttrib . ' ' : '' ) . self::CLASS_EDIT_SOURCE;
+			}
 		}
 
 		// Exit if we're using the single edit tab.
@@ -693,24 +706,22 @@ class VisualEditorHooks {
 		if ( self::isVisualAvailable( $title, $skin->getRequest(), $user ) ) {
 			// @phan-suppress-next-line PhanTypeArraySuspiciousNullable
 			$veEditSection = $tabMessages['editsection'];
-
 			$attribs = $result['editsection']['attribs'];
-			$attribs['class'] = ( $attribs['class'] ?? '' ) . ' mw-editsection-visualeditor';
 
 			$veLink = [
 				'text' => $skin->msg( $veEditSection )->inLanguage( $lang )->text(),
 				'targetTitle' => $title,
 				'attribs' => $attribs,
+				'class' => self::CLASS_EDIT_VISUAL,
 				'query' => [ 'veaction' => 'edit', 'section' => $section ],
 				'options' => [ 'noclasses', 'known' ]
 			];
 
-			$result['veeditsection'] = $veLink;
+			// These assume that 'editsection' is the last item in the array.
 			if ( $config->get( 'VisualEditorTabPosition' ) === 'before' ) {
-				krsort( $result );
-				// TODO: This will probably cause weird ordering if any other extensions added something
-				// already.
-				// ... wfArrayInsertBefore?
+				array_splice( $result, -1, 0, [ 'veeditsection' => $veLink ] );
+			} else {
+				$result['veeditsection'] = $veLink;
 			}
 		}
 	}
