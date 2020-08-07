@@ -609,6 +609,10 @@
 		 * twice or more.
 		 */
 		setupEditLinks: function () {
+			var skin = mw.config.get( 'skin' );
+			mw.skin = mw.skin || {};
+			mw.skin.showIcons = mw.skin.showIcons || skin === 'minerva'; // || skin === 'vector';
+
 			// NWE
 			if ( init.isWikitextAvailable && !isOnlyTabVE() ) {
 				$(
@@ -723,7 +727,7 @@
 					$caVeEdit = $( caVeEdit );
 					$caVeEditLink = $caVeEdit.find( 'a' );
 					// HACK: Copy the 'class' attribute, otherwise the link has no icon on Minerva
-					if ( isMinerva ) {
+					if ( mw.skin.showIcons ) {
 						$caVeEdit.attr( 'class', $caEdit.attr( 'class' ) );
 						$caVeEditLink.attr( 'class', $caEditLink.attr( 'class' ) );
 					}
@@ -759,7 +763,7 @@
 				$( '#ca-addsection' ).off( '.ve-target' ).on( 'click.ve-target', init.onEditTabClick.bind( init, 'source' ) );
 			}
 
-			if ( isMinerva ) {
+			if ( mw.skin.showIcons ) {
 				// Minerva hides the link text - display tiny icons instead
 				mw.loader.load( [ 'oojs-ui.styles.icons-editing-advanced', 'oojs-ui.styles.icons-accessibility' ] );
 				$caEdit.find( 'a' ).each( function () {
@@ -783,7 +787,6 @@
 
 		setupMultiSectionLinks: function () {
 			var $editsections = $( '#mw-content-text .mw-editsection' ),
-				isMinerva = mw.config.get( 'skin' ) === 'minerva',
 				bodyDir = $( document.body ).css( 'direction' );
 
 			// Match direction of the user interface
@@ -835,7 +838,7 @@
 				} );
 			}
 
-			if ( isMinerva ) {
+			if ( mw.skin.showIcons ) {
 				// Minerva hides the link text - display tiny icons instead
 				mw.loader.load( [ 'oojs-ui.styles.icons-editing-advanced', 'oojs-ui.styles.icons-accessibility' ] );
 				$( '#mw-content-text .mw-editsection a.mw-editsection-source' ).each( function () {
