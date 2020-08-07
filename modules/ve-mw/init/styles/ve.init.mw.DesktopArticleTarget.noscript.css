@@ -14,7 +14,6 @@
 .client-nojs .mw-editsection-divider,
 .client-nojs .mw-editsection-visualeditor,
 .ve-not-available #ca-ve-edit,
-.ve-not-available .mw-editsection-divider,
 .ve-not-available .mw-editsection-visualeditor {
 	display: none;
 }

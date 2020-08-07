@@ -612,8 +612,8 @@
 			// NWE
 			if ( init.isWikitextAvailable && !isOnlyTabVE() ) {
 				$(
-					// Edit section links, except VE ones when both editors visible
-					'.mw-editsection a:not( .mw-editsection-visualeditor ),' +
+					// Edit source section link
+					'.mw-editsection a.mw-editsection-source,' +
 					// Edit tab
 					'#ca-edit a,' +
 					// Add section is currently a wikitext-only feature
@@ -799,7 +799,7 @@
 				// If PHP didn't build the section edit links (because of caching), build them
 				$editsections.each( function () {
 					var $editsection = $( this ),
-						$editSourceLink = $editsection.find( 'a' ).eq( 0 ),
+						$editSourceLink = $editsection.find( 'a.mw-editsection-source' ).first(),
 						$editLink = $editSourceLink.clone(),
 						$divider = $( '<span>' ),
 						dividerText = mw.msg( 'pipe-separator' );
@@ -838,7 +838,7 @@
 			if ( isMinerva ) {
 				// Minerva hides the link text - display tiny icons instead
 				mw.loader.load( [ 'oojs-ui.styles.icons-editing-advanced', 'oojs-ui.styles.icons-accessibility' ] );
-				$( '#mw-content-text .mw-editsection a:not(.mw-editsection-visualeditor)' ).each( function () {
+				$( '#mw-content-text .mw-editsection a.mw-editsection-source' ).each( function () {
 					var $icon = $( '<span>' ).addClass( 'mw-ui-icon mw-ui-icon-element mw-ui-icon-wikiText' );
 					$( this ).addClass( 've-edit-source' ).prepend( $icon );
 				} );
@@ -858,7 +858,7 @@
 					.off( '.ve-target' ).on( 'click.ve-target', init.onEditSectionLinkClick.bind( init, 'visual' ) );
 				if ( init.isWikitextAvailable ) {
 					// TOOD: Make this less fragile
-					$editsections.find( 'a:not( .mw-editsection-visualeditor )' )
+					$editsections.find( 'a.mw-editsection-source' )
 						.off( '.ve-target' ).on( 'click.ve-target', init.onEditSectionLinkClick.bind( init, 'source' ) );
 				}
 			}
