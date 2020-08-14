@@ -1201,7 +1201,7 @@ ve.init.mw.DesktopArticleTarget.prototype.transformCategoryLinks = function ( $c
  */
 ve.init.mw.DesktopArticleTarget.prototype.updateHistoryState = function () {
 	var uri,
-		veaction = this.getDefaultMode() === 'visual' ? 'edit' : 'editsource',
+		veaction = this.getDefaultMode() === 'visual' ? 'editvisual' : 'editsource',
 		section = this.section !== null ? this.section : undefined;
 
 	// Push veaction=edit(source) url in history (if not already. If we got here by a veaction=edit(source)
@@ -1327,16 +1327,16 @@ ve.init.mw.DesktopArticleTarget.prototype.onWindowPopState = function ( e ) {
 		if ( veaction === 'editsource' && this.getDefaultMode() === 'visual' ) {
 			this.actFromPopState = true;
 			this.switchToWikitextEditor();
-		} else if ( veaction === 'edit' && this.getDefaultMode() === 'source' ) {
+		} else if ( veaction === 'editvisual' && this.getDefaultMode() === 'source' ) {
 			this.actFromPopState = true;
 			this.switchToVisualEditor();
 		}
 	}
-	if ( !this.active && ( veaction === 'edit' || veaction === 'editsource' ) ) {
+	if ( !this.active && ( veaction === 'editvisual' || veaction === 'editsource' ) ) {
 		this.actFromPopState = true;
 		this.activate();
 	}
-	if ( this.active && veaction !== 'edit' && veaction !== 'editsource' ) {
+	if ( this.active && veaction !== 'editvisual' && veaction !== 'editsource' ) {
 		this.actFromPopState = true;
 		// "Undo" the pop-state, as the event is not cancellable
 		history.pushState( this.popState, document.title, oldUri );

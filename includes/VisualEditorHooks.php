@@ -260,7 +260,7 @@ class VisualEditorHooks {
 
 		return (
 			// If forced by the URL parameter, skip the namespace check (T221892) and preference check
-			$req->getVal( 'veaction' ) === 'edit' || (
+			$req->getVal( 'veaction' ) === 'editvisual' || (
 				// Only in enabled namespaces
 				ApiVisualEditor::isAllowedNamespace( $veConfig, $title->getNamespace() ) &&
 
@@ -507,8 +507,8 @@ class VisualEditorHooks {
 				$veParams = $skin->editUrlOptions();
 				// Remove action=edit
 				unset( $veParams['action'] );
-				// Set veaction=edit
-				$veParams['veaction'] = 'edit';
+				// Set veaction=editvisual
+				$veParams['veaction'] = 'editvisual';
 				$veTabMessage = $tabMessages[$action];
 				// @phan-suppress-next-line PhanTypeInvalidDimOffset
 				$veTabText = $veTabMessage === null ? $data['text'] :
@@ -713,7 +713,7 @@ class VisualEditorHooks {
 				'targetTitle' => $title,
 				'attribs' => $attribs,
 				'class' => self::CLASS_EDIT_VISUAL,
-				'query' => [ 'veaction' => 'edit', 'section' => $section ],
+				'query' => [ 'veaction' => 'editvisual', 'section' => $section ],
 				'options' => [ 'noclasses', 'known' ]
 			];
 

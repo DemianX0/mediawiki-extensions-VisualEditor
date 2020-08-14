@@ -28,7 +28,7 @@
 		isLoading, tempWikitextEditor, tempWikitextEditorData, $toolbarPlaceholder,
 		configData = require( './data.json' ),
 		veactionToMode = {
-			edit: 'visual',
+			editvisual: 'visual',
 			editsource: 'source'
 		},
 		availableModes = [],
@@ -1139,7 +1139,7 @@
 		veEditSourceUri = veEditUri = veEditBaseUri.clone().extend( { action: 'edit' } );
 		delete veEditUri.query.veaction;
 	} else {
-		veEditUri = veEditBaseUri.clone().extend( { veaction: 'edit' } );
+		veEditUri = veEditBaseUri.clone().extend( { veaction: 'editvisual' } );
 		veEditSourceUri = veEditBaseUri.clone().extend( { veaction: 'editsource' } );
 		delete veEditUri.query.action;
 		delete veEditSourceUri.query.action;
@@ -1177,7 +1177,7 @@
 		init.isAvailable &&
 
 		// If forced by the URL parameter, skip the namespace check (T221892) and preference check
-		( uri.query.veaction === 'edit' || (
+		( uri.query.veaction === 'editvisual' || (
 			// Only in enabled namespaces
 			conf.namespaces.indexOf( new mw.Title( mw.config.get( 'wgRelevantPageName' ) ).getNamespaceId() ) !== -1 &&
 
