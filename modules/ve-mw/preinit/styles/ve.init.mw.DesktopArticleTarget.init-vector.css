@@ -9,7 +9,7 @@
 .ve-init-mw-desktopArticleTarget-toolbarPlaceholder {
 	font-size: 0.875em;
 	/* 1/0.875 */
-	margin: -1.14em -1.14em 1.14em -1.14em;
+	margin: -1.25rem -0.5rem 1.25rem -0.5rem;
 	/* High-definition-specific styles (because Vector adds 1em to the leftNav if width is 982px+ */
 }
 
