@@ -32,7 +32,7 @@
 		conf.enableWikitext &&
 		(
 			mw.user.options.get( 'visualeditor-newwikitext' ) ||
-			uri.query.veaction === 'editsource'
+			uri.query.edit === 'source'
 		) &&
 		mw.loader.getState( 'ext.visualEditor.mwwikitext' )
 	) {

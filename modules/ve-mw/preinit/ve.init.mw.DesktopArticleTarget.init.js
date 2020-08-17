@@ -27,9 +27,9 @@
 		tabPreference, enabledForUser, initialWikitext, oldId,
 		isLoading, tempWikitextEditor, tempWikitextEditorData, $toolbarPlaceholder,
 		configData = require( './data.json' ),
-		veactionToMode = {
-			editvisual: 'visual',
-			editsource: 'source'
+		editorModes = {
+			visual: true,
+			source: true,
 		},
 		availableModes = [],
 		active = false,
@@ -440,7 +440,7 @@
 		trackActivateStart( { type: 'page', mechanism: 'click', mode: mode } );
 
 		if ( !active ) {
-			if ( uri.query.action !== 'edit' && !( uri.query.veaction in veactionToMode ) ) {
+			if ( uri.query.action !== 'edit' && !( uri.query.edit in editorModes ) ) {
 				if ( history.pushState ) {
 					// Replace the current state with one that is tagged as ours, to prevent the
 					// back button from breaking when used to exit VE. FIXME: there should be a better
@@ -626,7 +626,7 @@
 					var linkUri = new mw.Uri( this.href );
 					if ( 'action' in linkUri.query ) {
 						delete linkUri.query.action;
-						linkUri.query.veaction = 'editsource';
+						linkUri.query.edit = 'source';
 						$( this ).attr( 'href', linkUri.toString() );
 					}
 				} );
@@ -997,7 +997,7 @@
 				// Modified click (e.g. ctrl+click)
 				!init.isUnmodifiedLeftClick( e ) ||
 				// Not an edit action
-				!( 'action' in linkUri.query || 'veaction' in linkUri.query ) ||
+				!( 'action' in linkUri.query || 'edit' in linkUri.query ) ||
 				// Edit target is on another host (e.g. commons file)
 				linkUri.getHostPort() !== location.host ||
 				// Title param doesn't match current page
@@ -1012,7 +1012,7 @@
 
 			trackActivateStart( { type: 'section', mechanism: 'click', mode: mode } );
 
-			if ( history.pushState && !( linkUri.query.veaction in veactionToMode ) ) {
+			if ( history.pushState && !( linkUri.query.edit in editorModes ) ) {
 				// Replace the current state with one that is tagged as ours, to prevent the
 				// back button from breaking when used to exit VE. FIXME: there should be a better
 				// way to do this. See also similar code in the DesktopArticleTarget constructor.
@@ -1119,10 +1119,10 @@
 	veEditBaseUri = pageCanLoadEditor ? uri : viewUri;
 	if ( init.isSingleEditTab ) {
 		veEditSourceUri = veEditUri = veEditBaseUri.clone().extend( { action: 'edit' } );
-		delete veEditUri.query.veaction;
+		delete veEditUri.query.edit;
 	} else {
-		veEditUri = veEditBaseUri.clone().extend( { veaction: 'editvisual' } );
-		veEditSourceUri = veEditBaseUri.clone().extend( { veaction: 'editsource' } );
+		veEditUri = veEditBaseUri.clone().extend( { edit: 'visual' } );
+		veEditSourceUri = veEditBaseUri.clone().extend( { edit: 'source' } );
 		delete veEditUri.query.action;
 		delete veEditSourceUri.query.action;
 	}
@@ -1159,7 +1159,7 @@
 		init.isAvailable &&
 
 		// If forced by the URL parameter, skip the namespace check (T221892) and preference check
-		( uri.query.veaction === 'editvisual' || (
+		( uri.query.edit === 'visual' || (
 			// Only in enabled namespaces
 			conf.namespaces.indexOf( new mw.Title( mw.config.get( 'wgRelevantPageName' ) ).getNamespaceId() ) !== -1 &&
 
@@ -1239,7 +1239,7 @@
 
 		function getInitialEditMode() {
 			// On view pages if veaction is correctly set
-			var m = veactionToMode[ uri.query.veaction ];
+			var m = uri.query.edit;
 			if ( isViewPage && init.isAvailable && availableModes.indexOf( m ) !== -1 ) {
 				return m;
 			}
