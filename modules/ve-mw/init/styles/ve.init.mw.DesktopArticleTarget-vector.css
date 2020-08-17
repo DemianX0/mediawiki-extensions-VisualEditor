@@ -32,7 +32,7 @@
 
 .ve-init-mw-desktopArticleTarget .ve-init-mw-target-surface > .ve-ce-surface .ve-ce-attachedRootNode,
 .ve-init-mw-desktopArticleTarget .ve-init-mw-target-surface > .ve-ui-surface-placeholder {
-	padding: 0 1rem;
+	padding: 0 1.5rem;
 }
 
 .mw-body .ve-init-mw-desktopArticleTarget .ve-init-mw-target-surface > .ve-ui-surface-placeholder > * {
