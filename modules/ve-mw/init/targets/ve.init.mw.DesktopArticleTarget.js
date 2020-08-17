@@ -1201,16 +1201,16 @@ ve.init.mw.DesktopArticleTarget.prototype.transformCategoryLinks = function ( $c
  */
 ve.init.mw.DesktopArticleTarget.prototype.updateHistoryState = function () {
 	var uri,
-		veaction = this.getDefaultMode() === 'visual' ? 'editvisual' : 'editsource',
+		veaction = this.getDefaultMode(),
 		section = this.section !== null ? this.section : undefined;
 
-	// Push veaction=edit(source) url in history (if not already. If we got here by a veaction=edit(source)
+	// Push edit=(visual|source) url in history (if not already. If we got here by a edit=(visual|source)
 	// permalink then it will be there already and the constructor called #activate)
 	if (
 		!this.actFromPopState &&
 		history.pushState &&
 		(
-			this.currentUri.query.veaction !== veaction ||
+			this.currentUri.query.edit !== veaction ||
 			this.currentUri.query.section !== section
 		) &&
 		this.currentUri.query.action !== 'edit'
@@ -1222,7 +1222,7 @@ ve.init.mw.DesktopArticleTarget.prototype.updateHistoryState = function () {
 			uri.query.action = 'edit';
 			mw.config.set( 'wgAction', 'edit' );
 		} else {
-			uri.query.veaction = veaction;
+			uri.query.edit = veaction;
 			delete uri.query.action;
 			mw.config.set( 'wgAction', 'view' );
 		}
@@ -1262,8 +1262,8 @@ ve.init.mw.DesktopArticleTarget.prototype.restorePage = function () {
 	if ( !this.actFromPopState && history.pushState ) {
 		// Remove the VisualEditor query parameters
 		uri = this.currentUri;
-		if ( 'veaction' in uri.query ) {
-			delete uri.query.veaction;
+		if ( 'edit' in uri.query ) {
+			delete uri.query.edit;
 		}
 		if ( this.section !== null ) {
 			// Translate into a fragment for the new URI:
@@ -1321,22 +1321,22 @@ ve.init.mw.DesktopArticleTarget.prototype.onWindowPopState = function ( e ) {
 	oldUri = this.currentUri;
 
 	this.currentUri = new mw.Uri( location.href );
-	veaction = this.currentUri.query.veaction;
+	veaction = this.currentUri.query.edit;
 
 	if ( this.isModeAvailable( 'source' ) && this.active ) {
-		if ( veaction === 'editsource' && this.getDefaultMode() === 'visual' ) {
+		if ( veaction === 'source' && this.getDefaultMode() === 'visual' ) {
 			this.actFromPopState = true;
 			this.switchToWikitextEditor();
-		} else if ( veaction === 'editvisual' && this.getDefaultMode() === 'source' ) {
+		} else if ( veaction === 'visual' && this.getDefaultMode() === 'source' ) {
 			this.actFromPopState = true;
 			this.switchToVisualEditor();
 		}
 	}
-	if ( !this.active && ( veaction === 'editvisual' || veaction === 'editsource' ) ) {
+	if ( !this.active && ( veaction === 'visual' || veaction === 'source' ) ) {
 		this.actFromPopState = true;
 		this.activate();
 	}
-	if ( this.active && veaction !== 'editvisual' && veaction !== 'editsource' ) {
+	if ( this.active && veaction !== 'visual' && veaction !== 'source' ) {
 		this.actFromPopState = true;
 		// "Undo" the pop-state, as the event is not cancellable
 		history.pushState( this.popState, document.title, oldUri );

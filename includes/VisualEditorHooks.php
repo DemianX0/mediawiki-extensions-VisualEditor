@@ -14,7 +14,7 @@ class VisualEditorHooks {
 
 	// Known parameters that VE does not handle
 	// TODO: Other params too?
-	// Known-good parameters: edit, veaction, section, oldid, lintid, preload, preloadparams, editintro
+	// Known-good parameters: edit, section, oldid, lintid, preload, preloadparams, editintro
 	// Partially-good: preloadtitle (source-mode only)
 	private const UNSUPPORTED_EDIT_PARAMS = [
 		'undo',
@@ -260,7 +260,7 @@ class VisualEditorHooks {
 
 		return (
 			// If forced by the URL parameter, skip the namespace check (T221892) and preference check
-			$req->getVal( 'veaction' ) === 'editvisual' || (
+			$req->getVal( 'edit' ) === 'visual' || (
 				// Only in enabled namespaces
 				ApiVisualEditor::isAllowedNamespace( $veConfig, $title->getNamespace() ) &&
 
@@ -507,8 +507,8 @@ class VisualEditorHooks {
 				$veParams = $skin->editUrlOptions();
 				// Remove action=edit
 				unset( $veParams['action'] );
-				// Set veaction=editvisual
-				$veParams['veaction'] = 'editvisual';
+				// Set edit=visual
+				$veParams['edit'] = 'visual';
 				$veTabMessage = $tabMessages[$action];
 				// @phan-suppress-next-line PhanTypeInvalidDimOffset
 				$veTabText = $veTabMessage === null ? $data['text'] :
@@ -713,7 +713,7 @@ class VisualEditorHooks {
 				'targetTitle' => $title,
 				'attribs' => $attribs,
 				'class' => self::CLASS_EDIT_VISUAL,
-				'query' => [ 'veaction' => 'editvisual', 'section' => $section ],
+				'query' => [ 'edit' => 'visual', 'section' => $section ],
 				'options' => [ 'noclasses', 'known' ]
 			];
 
@@ -1109,7 +1109,7 @@ class VisualEditorHooks {
 	 *   to wiki pages
 	 */
 	public static function onRedirectSpecialArticleRedirectParams( &$redirectParams ) {
-		$redirectParams[] = 'veaction';
+		$redirectParams[] = 'edit';
 	}
 
 	/**
@@ -1126,7 +1126,7 @@ class VisualEditorHooks {
 		Title $title, $article, OutputPage $output,
 		User $user, WebRequest $request, MediaWiki $mediaWiki
 	) {
-		if ( $request->getVal( 'veaction' ) ) {
+		if ( $request->getVal( 'edit' ) ) {
 			$request->setVal( 'redirect', 'no' );
 		}
 	}
