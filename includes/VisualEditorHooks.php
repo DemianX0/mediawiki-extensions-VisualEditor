@@ -322,8 +322,9 @@ class VisualEditorHooks {
 			$escapedUrl = htmlspecialchars( $url );
 
 			$out = $article->getContext()->getOutput();
-			$titleMsg = $title->exists() ? 'editing' : 'creating';
-			$out->setPageTitle( wfMessage( $titleMsg, $title->getPrefixedText() ) );
+			//$titleMsg = $title->exists() ? 'editing' : 'creating';
+			//$out->setPageTitle( wfMessage( $titleMsg, $title->getPrefixedText() ) );
+			$out->setPageTitle( $title->getPrefixedText() );
 			$out->addWikiMsg( 'visualeditor-toload', wfExpandUrl( $url ) );
 
 			// Redirect if the user has no JS (<noscript>)
