@@ -42,6 +42,14 @@
 	border: 0;
 }
 
+.ve-init-mw-desktopArticleTarget .CodeMirror-code,
+.ve-init-mw-desktopArticleTarget .CodeMirror-code *,
+.ve-init-mw-desktopArticleTarget .ve-ui-mwWikitextSurface .ve-ce-paragraphNode {
+	/* Wrap long URLs */
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+
 /* Main document debug bar */
 .ve-init-mw-desktopArticleTarget .ve-init-mw-target-surface > .ve-ui-debugBar {
 	padding: 1rem;
