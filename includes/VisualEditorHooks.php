@@ -57,6 +57,10 @@ class VisualEditorHooks {
 	 * @param Skin $skin The skin that's going to build the UI.
 	 */
 	public static function onBeforePageDisplay( OutputPage $output, Skin $skin ) {
+		if ( !SELF::$replaceEditor ) {
+			return;
+		}
+
 		if ( !(
 			ExtensionRegistry::getInstance()->isLoaded( 'MobileFrontend' ) &&
 			MediaWikiServices::getInstance()->getService( 'MobileFrontend.Context' )
@@ -341,10 +345,14 @@ class VisualEditorHooks {
 				");"
 			) );
 			$out->setRevisionId( $req->getInt( 'oldid', $article->getRevIdFetched() ) );
+			SELF::$replaceEditor = true;
 			return false;
 		}
 		return true;
 	}
+
+	/** true is VisualEditor replaces the basic editor. */
+	private static bool $replaceEditor = false;
 
 	/**
 	 * @param User $user
