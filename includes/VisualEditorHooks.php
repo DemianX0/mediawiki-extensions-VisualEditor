@@ -320,16 +320,22 @@ class VisualEditorHooks {
 		}
 
 		if ( self::isSupportedEditPage( $title, $user, $req ) ) {
-			$params = $req->getValues();
+			//$params = $req->getValues();
+			$params = $_GET;
 			$params['venoscript'] = '1';
-			$url = wfScript() . '?' . wfArrayToCgi( $params );
+
+			//$url = wfScript() . '?' . wfArrayToCgi( $params );
+			$url = $title->getLocalURL( $params );
+			//$url = '?' . wfArrayToCgi( $params );
 			$escapedUrl = htmlspecialchars( $url );
 
 			$out = $article->getContext()->getOutput();
 			//$titleMsg = $title->exists() ? 'editing' : 'creating';
 			//$out->setPageTitle( wfMessage( $titleMsg, $title->getPrefixedText() ) );
 			$out->setPageTitle( $title->getPrefixedText() );
-			$out->addWikiMsg( 'visualeditor-toload', wfExpandUrl( $url ) );
+
+			$url = wfExpandUrl( $url );
+			$out->addWikiMsg( 'visualeditor-toload', $url );
 
 			// Redirect if the user has no JS (<noscript>)
 			$out->addHeadItem(
